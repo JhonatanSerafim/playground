@@ -1,20 +1,20 @@
-const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NWFkYjA1Yy01M2ViLTQ0ZDctODkzNi0xMjlhYzc0OTcwYmUiLCJhdWQiOiJteWNsaWVudGlkIiwibmJmIjoxNzQ1OTQ1NzUyLCJpc3MiOiJodHRwOi8vMTAuMjUwLjAuMzo4NDAzL2F1dGh1c2VyIiwiZXhwIjoxNzQ1OTQ2MzUyLCJpYXQiOjE3NDU5NDU3NTIsImp0aSI6IjBkNGM4MDUyLWM4ODctNDA2MS05YWIzLWRmMzRmZjJmZjQxYSIsImVtYWlsIjoiYWRtaW5Aem91cGh5LmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwidGVuYW50Ijoiem91cGh5Iiwic3RhdHVzIjoiQUNUSVZFIiwidXNlcm5hbWUiOiJhZG1pbkB6b3VwaHkuY29tIn0.KDmGS4Da0RP2CLtnZkesncM5xv-2N3wH41EtLaeepqM';
+const TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NWFkYjA1Yy01M2ViLTQ0ZDctODkzNi0xMjlhYzc0OTcwYmUiLCJhdWQiOiJteWNsaWVudGlkIiwibmJmIjoxNzQ1OTQ3MTk3LCJpc3MiOiJodHRwOi8vMTAuMjUwLjAuMzo4NDAzL2F1dGh1c2VyIiwiZXhwIjoxNzQ1OTQ3Nzk3LCJpYXQiOjE3NDU5NDcxOTcsImp0aSI6ImE5ODBkM2E5LWEyNjItNDdkYS1iNDAwLTVlZTI5Y2E1NmMzYiIsImVtYWlsIjoiYWRtaW5Aem91cGh5LmNvbSIsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXSwidGVuYW50Ijoiem91cGh5Iiwic3RhdHVzIjoiQUNUSVZFIiwidXNlcm5hbWUiOiJhZG1pbkB6b3VwaHkuY29tIn0.pyZigdXGTKvwbl5CAf1jNi4eNEMTo1XL0PL9cabGE_w';
 
 const TENANT_ID = 'zouphy';
 
 const userData = {
-    fullName: 'novo Serafim ',
-    cpf: '92582382060',
-    birthdate: '1990-01-01',
-    email: 'nivdiasdsdfsd@mail.com',
-    phoneNumber: '11999999999',
-    cep: '12345678',
-    address: 'Rua Exemplo',
-    addressNumber: '123',
-    neighborhood: 'Centro',
-    city: 'São Paulo',
+    fullName: 'Jhonatan Serafim ',
+    cpf: '36094751884',
+    birthdate: '1990-02-04',
+    email: 'jhonatan.serafim@acaruiy.com.br',
+    phoneNumber: '1195596734',
+    cep: '06246035',
+    address: 'Rua Reinaldo Luiz Dogado',
+    addressNumber: '544',
+    neighborhood: 'Munhoz Júnior',
+    city: 'Osasco',
     state: 'SP',
-    complement: 'Apto 101',
+    complement: 'Casa 3',
 };
 
 async function cadastrarUsuario() {
@@ -105,8 +105,41 @@ async function buscarUsuarios() {
     }
 }
 
+// Função para deletar usuário
+async function deletarUsuario(userId) {
+    const response = await fetch(`http://172.16.20.232:8402/authuser/user/${userId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${TOKEN}`,
+            'x-tenant-id': TENANT_ID
+        }
+    });
+    if (!response.ok) {
+        throw new Error(`Erro ao deletar usuário: ${response.status}`);
+    }
+}       
+
 window.onload = buscarUsuarios;
 
 function handleCadastrar() {
     cadastrarUsuario();
+}
+
+async function handleDeletar() {
+    const userId = document.getElementById('userId').value.trim();
+    if (!userId) {
+        alert('Por favor, insira o ID do usuário');
+        return;
+    }
+
+    try {
+        await deletarUsuario(userId);
+        alert('Usuário deletado com sucesso!');
+        // Limpa o campo de ID
+        document.getElementById('userId').value = '';
+        // Atualiza a lista de usuários
+        await buscarUsuarios();
+    } catch (error) {
+        alert(error.message);
+    }
 }
